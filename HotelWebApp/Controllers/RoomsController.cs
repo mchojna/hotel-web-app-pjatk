@@ -4,7 +4,7 @@ using HotelWebApp.Model;
 using HotelWebApp.Repository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelWebApp.Controller;
+namespace HotelWebApp.Controllers;
 
 // api/rooms
 [Route("api/[controller]")]
@@ -12,6 +12,7 @@ namespace HotelWebApp.Controller;
 public class RoomsController : ControllerBase
 {
     private readonly List<Room> _rooms = RoomRepository.Rooms;
+    private readonly List<Reservation> _reservations = ReservationRepository.Reservations;
 
     // GET /api/rooms Zwraca wszystkie sale.
     // GET /api/rooms?minCapacity=20&hasProjector=true&activeOnly=true Zwraca sale przefiltrowane po query stringu.
@@ -47,9 +48,7 @@ public class RoomsController : ControllerBase
     [HttpGet]
     public IActionResult GetRoomsByBuildingCode([FromRoute] string buildingCode)
     {
-        var rooms = _rooms.Where(r => r.BuildingCode == buildingCode);
-
-        if (!rooms.Any()) return NotFound();
+        var rooms = _rooms.Where(r => r.BuildingCode == buildingCode).ToList();
 
         return Ok(rooms);
     }
@@ -76,20 +75,29 @@ public class RoomsController : ControllerBase
     // PUT /api/rooms/{id} Aktualizuje pełne dane sali.
     [Route("{id:int}")]
     [HttpPut]
-    public IActionResult SaveRoom([FromRoute] int id, [FromBody] CreateRoomDto saveRoomDto)
+    public IActionResult UpdateRoom([FromRoute] int id, [FromBody] CreateRoomDto updateRoomDto)
     {
         var room = _rooms.FirstOrDefault(r => r.Id == id);
 
         if (room == null) return NotFound();
 
-        room.Name = saveRoomDto.Name;
-        room.BuildingCode = saveRoomDto.BuildingCode;
-        room.Capacity = saveRoomDto.Capacity;
-        room.Floor = saveRoomDto.Floor;
-        room.HasProjector = saveRoomDto.HasProjector;
-        room.IsActive = saveRoomDto.IsActive;
+        if (room.IsActive && !updateRoomDto.IsActive)
+        {
+            var futureReservations = _reservations.Any(r =>
+                r.RoomId == id && r.Date > DateOnly.FromDateTime(DateTime.Now));
 
-        return NoContent();
+            if (futureReservations)
+                return Conflict("Nie można dezaktywować sali z przyszłymi rezerwacjami.");
+        }
+
+        room.Name = updateRoomDto.Name;
+        room.BuildingCode = updateRoomDto.BuildingCode;
+        room.Capacity = updateRoomDto.Capacity;
+        room.Floor = updateRoomDto.Floor;
+        room.HasProjector = updateRoomDto.HasProjector;
+        room.IsActive = updateRoomDto.IsActive;
+
+        return Ok(room);
     }
 
     // DELETE /api/rooms/{id} Usuwa salę.
@@ -100,6 +108,10 @@ public class RoomsController : ControllerBase
         var room = _rooms.FirstOrDefault(r => r.Id == id);
 
         if (room == null) return NotFound();
+
+        var reservations = _reservations.Where(r => r.RoomId == id && r.Date > DateOnly.FromDateTime(DateTime.Now));
+
+        if (reservations.Any()) return Conflict();
 
         _rooms.Remove(room);
         return NoContent();
