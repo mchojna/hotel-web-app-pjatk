@@ -1,4 +1,4 @@
-namespace HotelWebApp.Models;
+namespace HotelWebApp.Model;
 
 public class Room
 {
