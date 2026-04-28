@@ -1,0 +1,390 @@
+{
+  "info": {
+    "name": "HotelWebApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5208",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "GET wszystkie sale",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms"]
+            }
+          }
+        },
+        {
+          "name": "GET sala po Id (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET sala po Id (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "9999"]
+            }
+          }
+        },
+        {
+          "name": "GET sale po kodzie budynku",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/building/A",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "building", "A"]
+            }
+          }
+        },
+        {
+          "name": "GET sale - filtr query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms?minCapacity=20&hasProjector=true&activeOnly=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms"],
+              "query": [
+                { "key": "minCapacity", "value": "20" },
+                { "key": "hasProjector", "value": "true" },
+                { "key": "activeOnly", "value": "true" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST nowa sala (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lab 305\",\n  \"buildingCode\": \"D\",\n  \"floor\": 3,\n  \"capacity\": 18,\n  \"hasProjector\": true,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms"]
+            }
+          }
+        },
+        {
+          "name": "POST nowa sala - bledne dane (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"buildingCode\": \"\",\n  \"floor\": 1,\n  \"capacity\": 0,\n  \"hasProjector\": false,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms"]
+            }
+          }
+        },
+        {
+          "name": "PUT aktualizacja sali (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lab 305 - zaktualizowany\",\n  \"buildingCode\": \"D\",\n  \"floor\": 3,\n  \"capacity\": 25,\n  \"hasProjector\": true,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "6"]
+            }
+          }
+        },
+        {
+          "name": "PUT aktualizacja sali (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"X\",\n  \"buildingCode\": \"X\",\n  \"floor\": 0,\n  \"capacity\": 5,\n  \"hasProjector\": false,\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "9999"]
+            }
+          }
+        },
+        {
+          "name": "DELETE sala z przyszla rezerwacja (409)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE utworzona sala (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rooms/6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rooms", "6"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "GET wszystkie rezerwacje",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "GET rezerwacja po Id (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET rezerwacja po Id (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "9999"]
+            }
+          }
+        },
+        {
+          "name": "GET rezerwacje - filtry query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations?date=2026-05-10&status=confirmed&roomId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"],
+              "query": [
+                { "key": "date", "value": "2026-05-10" },
+                { "key": "status", "value": "confirmed" },
+                { "key": "roomId", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST nowa rezerwacja (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 4,\n  \"organizerName\": \"Anna Kowalska\",\n  \"topic\": \"Warsztaty z HTTP i REST\",\n  \"date\": \"2026-06-15\",\n  \"startTime\": \"10:00:00\",\n  \"endTime\": \"12:30:00\",\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "POST rezerwacja - kolizja czasowa (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 4,\n  \"organizerName\": \"Inny Organizator\",\n  \"topic\": \"Konflikt czasowy\",\n  \"date\": \"2026-06-15\",\n  \"startTime\": \"11:00:00\",\n  \"endTime\": \"13:00:00\",\n  \"status\": \"planned\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "POST rezerwacja - nieistniejaca sala (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 9999,\n  \"organizerName\": \"X\",\n  \"topic\": \"Y\",\n  \"date\": \"2026-07-01\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"10:00:00\",\n  \"status\": \"planned\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "POST rezerwacja - sala nieaktywna (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 5,\n  \"organizerName\": \"Test\",\n  \"topic\": \"Sala nieaktywna\",\n  \"date\": \"2026-07-01\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"10:00:00\",\n  \"status\": \"planned\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "POST rezerwacja - bledne dane (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"organizerName\": \"Test\",\n  \"topic\": \"Zly czas\",\n  \"date\": \"2026-07-01\",\n  \"startTime\": \"12:00:00\",\n  \"endTime\": \"10:00:00\",\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "POST rezerwacja - nieprawidlowy status (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 1,\n  \"organizerName\": \"Test\",\n  \"topic\": \"Zly status\",\n  \"date\": \"2026-07-01\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"10:00:00\",\n  \"status\": \"unknown\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "PUT aktualizacja rezerwacji (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomId\": 4,\n  \"organizerName\": \"Anna Kowalska\",\n  \"topic\": \"Warsztaty - aktualizacja\",\n  \"date\": \"2026-06-15\",\n  \"startTime\": \"14:00:00\",\n  \"endTime\": \"16:00:00\",\n  \"status\": \"planned\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "6"]
+            }
+          }
+        },
+        {
+          "name": "DELETE rezerwacja (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "6"]
+            }
+          }
+        },
+        {
+          "name": "DELETE rezerwacja (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reservations/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reservations", "9999"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
