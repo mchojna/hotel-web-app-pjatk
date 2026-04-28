@@ -1,3 +1,199 @@
 @HotelWebApp_HostAddress = http://localhost:5208
 
-### TODO
+### GET wszystkie sale
+GET {{HotelWebApp_HostAddress}}/api/rooms
+Accept: application/json
+
+### GET sala po Id (200)
+GET {{HotelWebApp_HostAddress}}/api/rooms/1
+Accept: application/json
+
+### GET sala po Id (404)
+GET {{HotelWebApp_HostAddress}}/api/rooms/9999
+Accept: application/json
+
+### GET sale po kodzie budynku (route)
+GET {{HotelWebApp_HostAddress}}/api/rooms/building/A
+Accept: application/json
+
+### GET sale - filtr query (minCapacity, hasProjector, activeOnly)
+GET {{HotelWebApp_HostAddress}}/api/rooms?minCapacity=20&hasProjector=true&activeOnly=true
+Accept: application/json
+
+### POST nowa sala (201)
+POST {{HotelWebApp_HostAddress}}/api/rooms
+Content-Type: application/json
+
+{
+  "name": "Lab 305",
+  "buildingCode": "D",
+  "floor": 3,
+  "capacity": 18,
+  "hasProjector": true,
+  "isActive": true
+}
+
+### POST nowa sala - bledne dane (400)
+POST {{HotelWebApp_HostAddress}}/api/rooms
+Content-Type: application/json
+
+{
+  "name": "",
+  "buildingCode": "",
+  "floor": 1,
+  "capacity": 0,
+  "hasProjector": false,
+  "isActive": true
+}
+
+### PUT aktualizacja sali (200) - podmien Id na utworzona sale
+PUT {{HotelWebApp_HostAddress}}/api/rooms/6
+Content-Type: application/json
+
+{
+  "name": "Lab 305 - zaktualizowany",
+  "buildingCode": "D",
+  "floor": 3,
+  "capacity": 25,
+  "hasProjector": true,
+  "isActive": true
+}
+
+### PUT aktualizacja sali (404)
+PUT {{HotelWebApp_HostAddress}}/api/rooms/9999
+Content-Type: application/json
+
+{
+  "name": "X",
+  "buildingCode": "X",
+  "floor": 0,
+  "capacity": 5,
+  "hasProjector": false,
+  "isActive": true
+}
+
+### DELETE sala z przyszla rezerwacja (409)
+DELETE {{HotelWebApp_HostAddress}}/api/rooms/1
+
+### DELETE utworzona sala (204) - podmien Id na utworzona sale
+DELETE {{HotelWebApp_HostAddress}}/api/rooms/6
+
+### GET wszystkie rezerwacje
+GET {{HotelWebApp_HostAddress}}/api/reservations
+Accept: application/json
+
+### GET rezerwacja po Id (200)
+GET {{HotelWebApp_HostAddress}}/api/reservations/1
+Accept: application/json
+
+### GET rezerwacja po Id (404)
+GET {{HotelWebApp_HostAddress}}/api/reservations/9999
+Accept: application/json
+
+### GET rezerwacje - filtry query
+GET {{HotelWebApp_HostAddress}}/api/reservations?date=2026-05-10&status=confirmed&roomId=1
+Accept: application/json
+
+### POST nowa rezerwacja (201)
+POST {{HotelWebApp_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "roomId": 4,
+  "organizerName": "Anna Kowalska",
+  "topic": "Warsztaty z HTTP i REST",
+  "date": "2026-06-15",
+  "startTime": "10:00:00",
+  "endTime": "12:30:00",
+  "status": "confirmed"
+}
+
+### POST rezerwacja - kolizja czasowa (409) - uruchom po poprzednim
+POST {{HotelWebApp_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "roomId": 4,
+  "organizerName": "Inny Organizator",
+  "topic": "Konflikt czasowy",
+  "date": "2026-06-15",
+  "startTime": "11:00:00",
+  "endTime": "13:00:00",
+  "status": "planned"
+}
+
+### POST rezerwacja - nieistniejaca sala (404)
+POST {{HotelWebApp_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "roomId": 9999,
+  "organizerName": "X",
+  "topic": "Y",
+  "date": "2026-07-01",
+  "startTime": "09:00:00",
+  "endTime": "10:00:00",
+  "status": "planned"
+}
+
+### POST rezerwacja - sala nieaktywna (409)
+POST {{HotelWebApp_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "roomId": 5,
+  "organizerName": "Test",
+  "topic": "Sala nieaktywna",
+  "date": "2026-07-01",
+  "startTime": "09:00:00",
+  "endTime": "10:00:00",
+  "status": "planned"
+}
+
+### POST rezerwacja - bledne dane (400) EndTime < StartTime
+POST {{HotelWebApp_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "organizerName": "Test",
+  "topic": "Zly czas",
+  "date": "2026-07-01",
+  "startTime": "12:00:00",
+  "endTime": "10:00:00",
+  "status": "confirmed"
+}
+
+### POST rezerwacja - nieprawidlowy status (400)
+POST {{HotelWebApp_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "roomId": 1,
+  "organizerName": "Test",
+  "topic": "Zly status",
+  "date": "2026-07-01",
+  "startTime": "09:00:00",
+  "endTime": "10:00:00",
+  "status": "unknown"
+}
+
+### PUT aktualizacja rezerwacji (200) - podmien Id na utworzona
+PUT {{HotelWebApp_HostAddress}}/api/reservations/6
+Content-Type: application/json
+
+{
+  "roomId": 4,
+  "organizerName": "Anna Kowalska",
+  "topic": "Warsztaty - aktualizacja",
+  "date": "2026-06-15",
+  "startTime": "14:00:00",
+  "endTime": "16:00:00",
+  "status": "planned"
+}
+
+### DELETE rezerwacja (204) - podmien Id na utworzona
+DELETE {{HotelWebApp_HostAddress}}/api/reservations/6
+
+### DELETE rezerwacja (404)
+DELETE {{HotelWebApp_HostAddress}}/api/reservations/9999
