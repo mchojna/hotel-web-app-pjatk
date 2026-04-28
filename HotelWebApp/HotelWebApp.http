@@ -1,6 +1,3 @@
 @HotelWebApp_HostAddress = http://localhost:5208
 
-GET {{HotelWebApp_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+### TODO

@@ -54,9 +54,9 @@ public class ReservationsController : ControllerBase
             Date = createReservationDto.Date,
             StartTime = createReservationDto.StartTime,
             EndTime = createReservationDto.EndTime,
-            Status = createReservationDto.Status,
+            Status = createReservationDto.Status
         };
-        
+
         _reservations.Add(reservation);
         return CreatedAtAction(nameof(GetReservationById), new { id = reservation.Id }, reservation);
     }
